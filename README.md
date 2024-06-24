@@ -4,6 +4,8 @@ MULTISIGNATURE WALLET CONTARCT ADDRESS: `0x1EaDbE06B4cb810db8274EfCdF3A47d5AF16E
 MULTISIGNATURE CONTRACT ADDRESS: `0x426c1C9a5929526DC8b77b1EDC02aD8AB5fC22fb`
 
 
+---
+
 Example how to integrate Coinbase Smart Wallet (RainbowKit, Wagmi)
 
 ```tsx
@@ -41,6 +43,8 @@ Example how to integrate Coinbase Smart Wallet (RainbowKit, Wagmi)
 
   })
 ```
+
+---
 
 Example of code to activate Coinbase Smart Wallet
 
