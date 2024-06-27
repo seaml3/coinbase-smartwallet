@@ -5,7 +5,7 @@ MULTISIGNATURE CONTRACT ADDRESS: `0x426c1C9a5929526DC8b77b1EDC02aD8AB5fC22fb` (B
 
 ---
 ### Donat3 Codebase
-./donat3 -- Donat3 is private repo. however, we can code changes for Base implementation during the hackaton. plese checkout this folder 
+./donat3 -- Donat3 is private repo. however, we can share the code changes for Base implementation during the hackaton. plese checkout this folder 
 
 ```
 e009c69 2024-06-25 14:50:38 +0700 Merge pull request #162 from seaml3/add_crate_smart_wallet
