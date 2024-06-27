@@ -4,7 +4,8 @@ MULTISIGNATURE WALLET CONTARCT ADDRESS: `0x1EaDbE06B4cb810db8274EfCdF3A47d5AF16E
 MULTISIGNATURE CONTRACT ADDRESS: `0x426c1C9a5929526DC8b77b1EDC02aD8AB5fC22fb` (Base Mainnet)
 
 ---
-./donat3 -- plese check this folder to code changes for Base implementation during the hackaton
+### Donat3 Codebase
+./donat3 -- Donat3 is private repo. however, we can code changes for Base implementation during the hackaton. plese checkout this folder 
 
 ```
 e009c69 2024-06-25 14:50:38 +0700 Merge pull request #162 from seaml3/add_crate_smart_wallet
@@ -37,8 +38,11 @@ b1973ac 2024-06-13 14:36:55 +0700 update dockerfile
 71f492d 2024-06-13 13:30:12 +0700 Merge pull request #149 from seaml3/base
 a61cd6d 2024-06-13 13:28:54 +0700 support base
 ```
-
 ---
+### Paymaster Proxy Codebase
+https://github.com/seaml3/coinbase-paymaster-proxy-public
+
+```
 
 Example how to integrate Coinbase Smart Wallet (RainbowKit, Wagmi)
 
