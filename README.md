@@ -43,4 +43,4 @@ a61cd6d 2024-06-13 13:28:54 +0700 support base
 ### Paymaster Proxy Codebase
 Paymaster proxy for protecting paymaster api for unintended usage
 
-https://github.com/seaml3/coinbase-paymaster-proxy-public
+https://github.com/seaml3/paymaster-proxy-public
