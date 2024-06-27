@@ -1,0 +1,24 @@
+Commit log for assets/package.json:
+a61cd6d 2024-06-13 13:28:54 +0700 support base
+Diff for assets/package.json:
+diff --git a/assets/package.json b/assets/package.json
+index 6be1d73..4fdb975 100644
+--- a/assets/package.json
++++ b/assets/package.json
+@@ -1,6 +1,6 @@
+ {
+   "dependencies": {
+-    "@rainbow-me/rainbowkit": "^2.0.5",
++    "@rainbow-me/rainbowkit": "^2.1.2",
+     "@tanstack/react-query": "^5.29.2",
+     "gsap": "^3.12.5",
+     "react": "^18.2.0",
+@@ -10,7 +10,7 @@
+     "scrollmagic": "^2.0.8",
+     "siwe": "^2.1.4",
+     "viem": "^2.9.16",
+-    "wagmi": "^2.5.19"
++    "wagmi": "^2.9.10"
+   },
+   "devDependencies": {
+     "@types/react": "^18.2.25",

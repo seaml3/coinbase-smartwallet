@@ -1,0 +1,82 @@
+Commit log for assets/js/components/Authentication.tsx:
+072817c 2024-06-15 10:32:52 +0700 fix authentication flow
+05ed2a6 2024-06-13 20:59:48 +0700 siwe only for bsc chain
+a61cd6d 2024-06-13 13:28:54 +0700 support base
+Diff for assets/js/components/Authentication.tsx:
+diff --git a/assets/js/components/Authentication.tsx b/assets/js/components/Authentication.tsx
+index 3f0e4c4..0bf452d 100644
+--- a/assets/js/components/Authentication.tsx
++++ b/assets/js/components/Authentication.tsx
+@@ -1,9 +1,11 @@
+ import React, { useState, useEffect, useRef } from "react";
+ import { walletStatusEnum } from "../types";
+-import { useAccount, useSignMessage, useDisconnect, useAccountEffect } from 'wagmi';
++import { useAccount, useSignMessage, useDisconnect, useAccountEffect, usePublicClient, useSwitchChain, useChainId } from 'wagmi';
+ import auth from "../auth";
+ import { SiweMessage } from "siwe";
+ import { useSessionValue } from "./SessionContextProvider";
++import { base, bsc } from "wagmi/chains";
++
+ 
+ type AuthenticationProps = {
+   enable: boolean;
+@@ -14,7 +16,7 @@ type AuthenticationProps = {
+ const Authentication = ({ onSuccess, enable }: AuthenticationProps) => {
+ 
+   const [walletStatus, setWalletStatus] = useState<walletStatusEnum>(walletStatusEnum.NotConnected);
+-  const { address, isConnected, isDisconnected, status, connector } = useAccount();
++  const { address, isConnected, isDisconnected, status, connector, chainId } = useAccount();
+ 
+   const { chain } = useAccount();
+   const { data: signature, signMessage, isError, isPending, isSuccess, isIdle } = useSignMessage();
+@@ -24,13 +26,25 @@ const Authentication = ({ onSuccess, enable }: AuthenticationProps) => {
+   const { disconnect } = useDisconnect();
+   const [autoSigninTriggered, setAutoSigninTriggered] = useState<boolean>(false);
+   const [retryable, setRetryable] = useState<boolean>(false);
++  const { switchChain } = useSwitchChain()
++  const { switchChain: switchChainToSignin } = useSwitchChain({
++    mutation: {
++      onSuccess: () => {
++        console.log('switching chain succcess to initial chain', chainId);
++        signIn();
++      }
++    }
++  })
+ 
+-
+-  const signIn = () => {
++  const signIn = async () => {
+     if (address && chain?.id) {
+-      message.current = auth.createMessage({ address, chainId: chain?.id });
+-      body.current = auth.getMessageBody({ message: message.current });
+-      signMessage({ message: body.current });
++      if (chainId !== bsc.id) {
++        await switchChainToSignin({ chainId: bsc.id });
++      } else {
++        message.current = auth.createMessage({ address, chainId: chainId });
++        body.current = auth.getMessageBody({ message: message.current });
++        signMessage({ message: body.current });
++      }
+     }
+   }
+ 
+@@ -49,7 +63,7 @@ const Authentication = ({ onSuccess, enable }: AuthenticationProps) => {
+   }, [address, connector]);
+ 
+   useEffect(() => {
+-    if (signature) {
++    if (signature && address) {
+       setWalletStatus(walletStatusEnum.Verified);
+       fetch('/api/siwe', {
+         method: 'POST',
+@@ -62,6 +76,10 @@ const Authentication = ({ onSuccess, enable }: AuthenticationProps) => {
+             setSessionValue(data?.data?.session);
+             setSessionAddress(data?.data?.wallet_address);
+             onSuccess();
++
++            if (connector?.id == "coinbase") {
++              switchChain({ chainId: base.id })
++            }
+           }
+         });
+       });

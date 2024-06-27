@@ -1,0 +1,16 @@
+Commit log for assets/js/components/VerifyAddressButton.tsx:
+072817c 2024-06-15 10:32:52 +0700 fix authentication flow
+05ed2a6 2024-06-13 20:59:48 +0700 siwe only for bsc chain
+Diff for assets/js/components/VerifyAddressButton.tsx:
+diff --git a/assets/js/components/VerifyAddressButton.tsx b/assets/js/components/VerifyAddressButton.tsx
+index 488fbaa..f93f0b4 100644
+--- a/assets/js/components/VerifyAddressButton.tsx
++++ b/assets/js/components/VerifyAddressButton.tsx
+@@ -4,6 +4,7 @@ import { useAccount, useSignMessage, useDisconnect } from 'wagmi';
+ import auth from "../auth";
+ import { SiweMessage } from "siwe";
+ import { useSessionValue } from "./SessionContextProvider";
++import { bsc } from "wagmi/chains";
+ 
+ type VerifyAddressButtonProps = {
+   onSuccess: () => void;

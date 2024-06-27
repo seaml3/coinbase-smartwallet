@@ -1,0 +1,23 @@
+Commit log for assets/js/app.js:
+a61cd6d 2024-06-13 13:28:54 +0700 support base
+Diff for assets/js/app.js:
+diff --git a/assets/js/app.js b/assets/js/app.js
+index a5a9901..65400da 100644
+--- a/assets/js/app.js
++++ b/assets/js/app.js
+@@ -37,7 +37,6 @@ Hooks.connectButton = {
+       ConnectWalletApp(connectButton)
+     }
+     window.addEventListener('connect-wallet', data => {
+-      console.log('connect-wallet event', data.detail)
+       this.pushEvent('connect-wallet', data.detail)
+     })
+ 
+@@ -48,7 +47,6 @@ Hooks.connectButton = {
+ 
+   destroyed () {
+     if (!this.unmountComponent) {
+-      console.log('destroyed unset')
+       return
+     }
+     this.unmountComponent(this.el)

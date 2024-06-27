@@ -1,0 +1,7 @@
+Commit log for priv/static/images/blo_dfk-logo.png:
+a61cd6d 2024-06-13 13:28:54 +0700 support base
+Diff for priv/static/images/blo_dfk-logo.png:
+diff --git a/priv/static/images/blo_dfk-logo.png b/priv/static/images/blo_dfk-logo.png
+new file mode 100644
+index 0000000..a5e5db1
+Binary files /dev/null and b/priv/static/images/blo_dfk-logo.png differ

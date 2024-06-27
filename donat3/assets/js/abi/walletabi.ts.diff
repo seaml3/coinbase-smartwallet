@@ -1,0 +1,188 @@
+Commit log for assets/js/abi/walletabi.ts:
+ae1b917 2024-06-21 21:26:14 +0700 support paymaster from env
+Diff for assets/js/abi/walletabi.ts:
+diff --git a/assets/js/abi/walletabi.ts b/assets/js/abi/walletabi.ts
+new file mode 100644
+index 0000000..28182fa
+--- /dev/null
++++ b/assets/js/abi/walletabi.ts
+@@ -0,0 +1,179 @@
++export const walletAbi = [
++  {
++    inputs: [],
++    stateMutability: "nonpayable",
++    type: "constructor",
++  },
++  {
++    inputs: [
++      {
++        internalType: "address",
++        name: "tokenAddress",
++        type: "address",
++      },
++    ],
++    name: "adminAddSupportedToken",
++    outputs: [],
++    stateMutability: "nonpayable",
++    type: "function",
++  },
++  {
++    inputs: [
++      {
++        internalType: "address[]",
++        name: "tokenAddresses",
++        type: "address[]",
++      },
++    ],
++    name: "adminAddSupportedTokenBatch",
++    outputs: [],
++    stateMutability: "nonpayable",
++    type: "function",
++  },
++  {
++    inputs: [
++      {
++        internalType: "address",
++        name: "tokenAddress",
++        type: "address",
++      },
++    ],
++    name: "adminRemoveSupportedToken",
++    outputs: [],
++    stateMutability: "nonpayable",
++    type: "function",
++  },
++  {
++    inputs: [
++      {
++        internalType: "address",
++        name: "tokenAddress",
++        type: "address",
++      },
++      {
++        internalType: "uint256",
++        name: "amount",
++        type: "uint256",
++      },
++      {
++        internalType: "uint32",
++        name: "refCode",
++        type: "uint32",
++      },
++    ],
++    name: "deposit",
++    outputs: [],
++    stateMutability: "payable",
++    type: "function",
++  },
++  {
++    inputs: [
++      {
++        internalType: "uint32",
++        name: "refCode",
++        type: "uint32",
++      },
++    ],
++    name: "depositEth",
++    outputs: [],
++    stateMutability: "payable",
++    type: "function",
++  },
++  {
++    inputs: [],
++    name: "owner",
++    outputs: [
++      {
++        internalType: "address",
++        name: "",
++        type: "address",
++      },
++    ],
++    stateMutability: "view",
++    type: "function",
++  },
++  {
++    inputs: [],
++    name: "renounceOwnership",
++    outputs: [],
++    stateMutability: "nonpayable",
++    type: "function",
++  },
++  {
++    inputs: [
++      {
++        internalType: "address",
++        name: "",
++        type: "address",
++      },
++    ],
++    name: "supportedTokens",
++    outputs: [
++      {
++        internalType: "bool",
++        name: "",
++        type: "bool",
++      },
++    ],
++    stateMutability: "view",
++    type: "function",
++  },
++  {
++    inputs: [
++      {
++        internalType: "address",
++        name: "newOwner",
++        type: "address",
++      },
++    ],
++    name: "transferOwnership",
++    outputs: [],
++    stateMutability: "nonpayable",
++    type: "function",
++  },
++  {
++    inputs: [
++      {
++        internalType: "address",
++        name: "tokenAddress",
++        type: "address",
++      },
++      {
++        internalType: "address",
++        name: "destination",
++        type: "address",
++      },
++      {
++        internalType: "uint256",
++        name: "amount",
++        type: "uint256",
++      },
++    ],
++    name: "withdraw",
++    outputs: [],
++    stateMutability: "nonpayable",
++    type: "function",
++  },
++  {
++    inputs: [
++      {
++        internalType: "address payable",
++        name: "destination",
++        type: "address",
++      },
++      {
++        internalType: "uint256",
++        name: "amount",
++        type: "uint256",
++      },
++    ],
++    name: "withdrawEth",
++    outputs: [],
++    stateMutability: "nonpayable",
++    type: "function",
++  },
++  {
++    stateMutability: "payable",
++    type: "receive",
++  },
++] as const;

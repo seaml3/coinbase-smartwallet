@@ -1,0 +1,30 @@
+Commit log for assets/js/components/Donat3ConnectButton.tsx:
+a61cd6d 2024-06-13 13:28:54 +0700 support base
+Diff for assets/js/components/Donat3ConnectButton.tsx:
+diff --git a/assets/js/components/Donat3ConnectButton.tsx b/assets/js/components/Donat3ConnectButton.tsx
+index 4518ae1..25a94f3 100644
+--- a/assets/js/components/Donat3ConnectButton.tsx
++++ b/assets/js/components/Donat3ConnectButton.tsx
+@@ -2,14 +2,12 @@ import React from 'react';
+ import { ConnectButton } from '@rainbow-me/rainbowkit';
+ import Authentication from './Authentication';
+ import { useState } from 'react';
+-import { useDisconnect } from 'wagmi';
+ import { useSessionValue } from './SessionContextProvider';
+ type props = {
+     onSuccess?: () => void;
+ }
+ export const Donat3ConnectButton = ({ onSuccess }: props) => {
+     const { sessionValue } = useSessionValue();
+-
+     return (
+         <ConnectButton.Custom>
+             {({
+@@ -38,7 +36,6 @@ export const Donat3ConnectButton = ({ onSuccess }: props) => {
+                 }
+ 
+                 const successAuth = () => {
+-                    console.log("success auth");
+                     setEnableAuth(false);
+                     onSuccess && onSuccess();
+                 }

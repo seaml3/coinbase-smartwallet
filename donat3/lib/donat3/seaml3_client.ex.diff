@@ -1,0 +1,33 @@
+Commit log for lib/donat3/seaml3_client.ex:
+a61cd6d 2024-06-13 13:28:54 +0700 support base
+Diff for lib/donat3/seaml3_client.ex:
+diff --git a/lib/donat3/seaml3_client.ex b/lib/donat3/seaml3_client.ex
+index 5b10ebc..8124f7a 100644
+--- a/lib/donat3/seaml3_client.ex
++++ b/lib/donat3/seaml3_client.ex
+@@ -26,6 +26,25 @@ defmodule Donat3.Seaml3Client do
+     end
+   end
+ 
++  def verify_signature(message, signature, address) do
++    content = %{
++      address: address,
++      signature: signature,
++      message: message
++    }
++
++    headers = [{"content-type", "application/json"}]
++
++    case post("/api/signatures/verify", content, headers) do
++      {:ok, %{status_code: 200, body: body}} ->
++        {:ok, body}
++
++      other ->
++        Logger.error("[Seaml3Client] Unexpected response: #{inspect(other)}")
++        handle_unexpected_response(other)
++    end
++  end
++
+   @impl true
+   def process_url(path) do
+     output = fetch_seaml3_multisig_signer() |> URI.merge(path) |> URI.to_string()

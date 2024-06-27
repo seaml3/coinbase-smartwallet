@@ -1,0 +1,15 @@
+Commit log for lib/donat3_web/live/donate_live/index.ex:
+ae1b917 2024-06-21 21:26:14 +0700 support paymaster from env
+Diff for lib/donat3_web/live/donate_live/index.ex:
+diff --git a/lib/donat3_web/live/donate_live/index.ex b/lib/donat3_web/live/donate_live/index.ex
+index 6a5d92b..4e8b2e4 100644
+--- a/lib/donat3_web/live/donate_live/index.ex
++++ b/lib/donat3_web/live/donate_live/index.ex
+@@ -20,6 +20,7 @@ defmodule Donat3Web.DonateLive.Index do
+       |> assign(:page_title, "Donat3 - Tip #{params["username"]}")
+       |> assign(:username, params["username"])
+       |> assign(:chain_env, Donat3.AppConfig.get(:chain_env))
++      |> assign(:paymaster_url, Donat3.AppConfig.get(:paymaster_url))
+       |> assign(:donate, nil)
+     else
+       socket

@@ -1,0 +1,16 @@
+Commit log for lib/donat3/accumulate_balances.ex:
+124aa19 2024-06-24 00:04:52 +0700 add chain to asset logo in the dashboard asset section
+Diff for lib/donat3/accumulate_balances.ex:
+diff --git a/lib/donat3/accumulate_balances.ex b/lib/donat3/accumulate_balances.ex
+index 76042fd..efcdc35 100644
+--- a/lib/donat3/accumulate_balances.ex
++++ b/lib/donat3/accumulate_balances.ex
+@@ -34,7 +34,7 @@ defmodule Donat3.AccumulateBalances do
+     |> where([ab], ab.total_balance > 0)
+     |> order_by([ab], asc: ab.asset_id)
+     |> Repo.all()
+-    |> Repo.preload(:asset)
++    |> Repo.preload(asset: :network)
+   end
+ 
+   def get_or_insert_accumulate_balance(user_uid, asset_id) do

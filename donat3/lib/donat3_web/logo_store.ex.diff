@@ -1,0 +1,22 @@
+Commit log for lib/donat3_web/logo_store.ex:
+e15a528 2024-06-13 16:33:08 +0700 add logo
+Diff for lib/donat3_web/logo_store.ex:
+diff --git a/lib/donat3_web/logo_store.ex b/lib/donat3_web/logo_store.ex
+index e181dd3..d9cd1e8 100644
+--- a/lib/donat3_web/logo_store.ex
++++ b/lib/donat3_web/logo_store.ex
+@@ -99,6 +99,14 @@ defmodule Donat3Web.LogoStore do
+     png(asset_uid)
+   end
+ 
++  def filename(asset_uid) when asset_uid == "blo_base" or asset_uid == "blo_dfk" do
++    png(asset_uid)
++  end
++
++  def filename(asset_uid) when asset_uid == "mavia_base" do
++    png(asset_uid)
++  end
++
+   def filename(asset_uid) do
+     "/images/#{asset_uid}-logo.svg"
+   end

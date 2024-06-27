@@ -1,0 +1,267 @@
+Commit log for assets/js/components/DonationForm.tsx:
+f144bf1 2024-06-23 10:21:13 +0700 async submit transaction api and blokchain
+ae1b917 2024-06-21 21:26:14 +0700 support paymaster from env
+072817c 2024-06-15 10:32:52 +0700 fix authentication flow
+Diff for assets/js/components/DonationForm.tsx:
+diff --git a/assets/js/components/DonationForm.tsx b/assets/js/components/DonationForm.tsx
+index 25fb47b..22a6188 100644
+--- a/assets/js/components/DonationForm.tsx
++++ b/assets/js/components/DonationForm.tsx
+@@ -1,7 +1,7 @@
+-import React, { useState, useEffect, useRef } from "react";
++import React, { useState, useEffect, useRef, useMemo } from "react";
+ import { useAccount, useConnect, useBalance, useSwitchChain, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+ import Select from 'react-select';
+-import walletAbi from "../abi/wallet.json";
++import { walletAbi } from "../abi/walletabi";
+ import { erc20Abi } from 'viem';
+ import { createDonateTransaction, submitDonateTransaction } from "../depositTransaction";
+ import { useSessionValue } from "./SessionContextProvider";
+@@ -9,8 +9,7 @@ import { parseUnits } from 'viem'
+ import assets from "../assets";
+ import StreamingStatus from "./StreamingStatus";
+ import { useStreamerStatus } from "./StreamerContextProvider";
+-
+-const MAX_UINT = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
++import { useCapabilities, useWriteContracts } from "wagmi/experimental"
+ 
+ enum donateButtonStateEnum {
+   Ready,
+@@ -55,6 +54,13 @@ type GroupAssetType = {
+   options: AssetOptionType[]
+ }
+ 
++
++function generateRandomInteger() {
++  const array = new Uint32Array(1);
++  window.crypto.getRandomValues(array);
++  return array[0];
++}
++
+ const DonationForm = ({ readyForDonation, address, onError }: Props) => {
+   const [amount, setAmount] = useState<string>('');
+   const [amountError, setAmountError] = useState<boolean>(false);
+@@ -68,14 +74,31 @@ const DonationForm = ({ readyForDonation, address, onError }: Props) => {
+   const { sessionValue } = useSessionValue();
+   const [buttonState, setButtonState] = useState<donateButtonStateEnum>(donateButtonStateEnum.Ready);
+   const { data: balance } = useBalance({ address: address, token: coin?.data.address, chainId: coin?.data.chainId, query: { enabled: coin?.data.address == coinChain?.data.address } });
++  const account = useAccount();
+ 
+   const [dataErc20, setDataErc20] = useState<any>(undefined);
+   const [walletData, setWalletData] = useState<any>(undefined);
++  const [completeDonate, setCompleteDonate] = useState<boolean>(false);
++
++  const { username } = useStreamerStatus();
+ 
++  const { data: availableCapabilities } = useCapabilities({ account: account.address });
+ 
+ 
+-  const { username } = useStreamerStatus();
+-  const { isSuccess: isWalletSuccess, writeContract: writeWallet, error: walletError } = useWriteContract({
++  const { writeContracts: writeWalletContracts } = useWriteContracts({
++    mutation: {
++      onError: (error) => {
++        onError && onError();
++        console.log('WriteContracts[paymaster] wallet write error', error);
++      },
++      onSuccess: (data) => {
++        setCompleteDonate(true);
++        setWalletData(data);
++      }
++    }
++  });
++
++  const { writeContract: writeWallet } = useWriteContract({
+     mutation: {
+       onError: (error) => {
+         onError && onError();
+@@ -83,11 +106,12 @@ const DonationForm = ({ readyForDonation, address, onError }: Props) => {
+       },
+       onSuccess: (data) => {
+         setWalletData(data);
++        setCompleteDonate(true);
+       }
+     }
+   });
+ 
+-  const { isSuccess: isErc20Success, writeContract: writeErc20 } = useWriteContract({
++  const { writeContract: writeErc20 } = useWriteContract({
+     mutation: {
+       onError: (error) => {
+         onError && onError();
+@@ -99,7 +123,44 @@ const DonationForm = ({ readyForDonation, address, onError }: Props) => {
+     }
+   });
+ 
++  const paymasterHtml = document.querySelector('input[name="paymasterUrl"]') as HTMLInputElement;
++  const paymasterUrl = paymasterHtml ? paymasterHtml.value : '';
++
+   const { chain } = useAccount()
++
++  const hasWalletCapabilities = (availableCaps, chainId) => {
++    if (!availableCaps || !chainId) return false;
++    const capabilitiesForChain = availableCaps[chainId];
++    if (
++      capabilitiesForChain["paymasterService"] &&
++      capabilitiesForChain["paymasterService"].supported
++    ) {
++      return true;
++    } else {
++      return false;
++    }
++  }
++
++  const memoizedHasWalletCapabilities = useMemo(() => {
++    return hasWalletCapabilities(availableCapabilities, account.chainId);
++  }, [availableCapabilities, account.chainId]);
++
++  const capabilities = useMemo(() => {
++    if (memoizedHasWalletCapabilities) {
++      return {
++        paymasterService: {
++          url: paymasterUrl
++        },
++      };
++    }
++  }, [availableCapabilities, account.chainId]);
++
++  const refCode = useMemo(() => {
++    const code = generateRandomInteger();
++    return code;
++  }, [])
++
++
+   const { switchChain } =
+     useSwitchChain({
+       mutation: {
+@@ -123,9 +184,6 @@ const DonationForm = ({ readyForDonation, address, onError }: Props) => {
+ 
+   }, [coinChain]);
+ 
+-  const calculateMaxUint = (): bigint => {
+-    return BigInt(MAX_UINT);
+-  }
+ 
+   useEffect(() => {
+     if ((!username) || (username == '')) {
+@@ -166,22 +224,22 @@ const DonationForm = ({ readyForDonation, address, onError }: Props) => {
+   useEffect(() => {
+     if (isErc20WaitingSuccess && coin?.data.address) {
+       writeWallet({
+-        abi: walletAbi.abi,
++        abi: walletAbi,
+         functionName: "deposit",
+         address: coin?.data.walletContractAddress,
+-        args: [coin?.data.address, parseUnits(amount, coin?.data.decimalPlaces), donateTransactionResult.current["ref_code"]]
++        args: [coin?.data.address, parseUnits(amount, coin?.data.decimalPlaces), refCode]
+       });
+     }
+   }, [isErc20WaitingSuccess]);
+ 
+ 
+   useEffect(() => {
+-    if (coin && sessionValue && address && isWalletSuccess && walletData) {
++    if (coin && sessionValue && address && completeDonate && walletData) {
+       submitDonateTransaction({
+         assetId: coin.value,
+         address: address,
+         session: sessionValue,
+-        refCode: donateTransactionResult.current["ref_code"],
++        refCode: refCode,
+         transactionId: donateTransactionResult.current["transaction_id"]
+       }).then((res) => {
+         if (res.status === 204) {
+@@ -190,7 +248,7 @@ const DonationForm = ({ readyForDonation, address, onError }: Props) => {
+         }
+       })
+     }
+-  }, [isWalletSuccess, walletData]);
++  }, [walletData, completeDonate]);
+ 
+ 
+   const handleDonate = async (event: React.FormEvent) => {
+@@ -207,28 +265,64 @@ const DonationForm = ({ readyForDonation, address, onError }: Props) => {
+         donateMessage: message,
+         username: username,
+         address: address,
+-        session: sessionValue
++        session: sessionValue,
++        refCode: refCode
+       }).then(async (res) => {
+-        if (res.status === 201) {
+-          donateTransactionResult.current = await res.json();
+-          if (coin?.data.native) {
+-            writeWallet({
+-              abi: walletAbi.abi,
+-              functionName: "depositEth",
+-              address: coin?.data.walletContractAddress,
+-              args: [donateTransactionResult.current["ref_code"]],
+-              value: parseUnits(amount, coin?.data.decimalPlaces),
+-            });
+-          } else {
+-            writeErc20({
+-              abi: erc20Abi,
+-              args: [coin?.data.walletContractAddress, calculateMaxUint()],
+-              functionName: 'approve',
+-              address: coin?.data.address,
+-            });
+-          }
+-        }
++        donateTransactionResult.current = await res.json();
+       })
++
++
++      if (coin?.data.native) {
++        if (memoizedHasWalletCapabilities) {
++          writeWalletContracts({
++            contracts: [
++              {
++                abi: walletAbi,
++                functionName: "depositEth",
++                address: coin?.data.walletContractAddress,
++                args: [refCode],
++                value: parseUnits(amount, coin?.data.decimalPlaces),
++              }
++            ],
++            capabilities
++          })
++        } else {
++          writeWallet({
++            abi: walletAbi,
++            functionName: "depositEth",
++            address: coin?.data.walletContractAddress,
++            args: [refCode],
++            value: parseUnits(amount, coin?.data.decimalPlaces),
++          });
++        }
++      } else {
++        if (memoizedHasWalletCapabilities) {
++          writeWalletContracts({
++            contracts: [
++              {
++                abi: erc20Abi,
++                args: [coin?.data.walletContractAddress, parseUnits(amount, coin?.data.decimalPlaces)],
++                functionName: 'approve',
++                address: coin?.data.address,
++              },
++              {
++                abi: walletAbi,
++                functionName: "deposit",
++                address: coin?.data.walletContractAddress,
++                args: [coin?.data.address, parseUnits(amount, coin?.data.decimalPlaces), refCode]
++              }
++            ],
++            capabilities,
++          });
++        } else {
++          writeErc20({
++            abi: erc20Abi,
++            args: [coin?.data.walletContractAddress, parseUnits(amount, coin?.data.decimalPlaces)],
++            functionName: 'approve',
++            address: coin?.data.address,
++          });
++        }
++      }
+     }
+   }
+ 

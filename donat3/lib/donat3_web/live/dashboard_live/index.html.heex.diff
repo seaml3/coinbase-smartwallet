@@ -1,0 +1,21 @@
+Commit log for lib/donat3_web/live/dashboard_live/index.html.heex:
+124aa19 2024-06-24 00:04:52 +0700 add chain to asset logo in the dashboard asset section
+Diff for lib/donat3_web/live/dashboard_live/index.html.heex:
+diff --git a/lib/donat3_web/live/dashboard_live/index.html.heex b/lib/donat3_web/live/dashboard_live/index.html.heex
+index 1caa4ca..0dde38d 100644
+--- a/lib/donat3_web/live/dashboard_live/index.html.heex
++++ b/lib/donat3_web/live/dashboard_live/index.html.heex
+@@ -231,9 +231,10 @@
+           class="w-full flex bg-gradient-to-tl from-white to-zinc-50 shadow-sm m-1
+           border-b border-slate-400 p-3 rounded-md align-middle flex-wrap"
+         >
+-          <div class="md:w-1/4 text-lg font-semibold flex w-full  md:px-4 text-black align-middle items-center">
+-            <img src={get_asset_logo(balance.asset_id)} class="w-4 h-4 mx-2" />
+-            <%= balance.asset.name %>
++          <div class="md:w-1/4 text-lg font-semibold flex w-full  md:px-4 text-black align-middle items-center relative">
++            <img src={get_asset_logo(balance.asset_id)} class="w-10 h-10 mx-3" />
++            <img src={get_chain_logo(balance.asset.network.uid)} class="w-6 h-6 m-1 p-1 rounded-full bg-white absolute left-8 md:left-12 top-4">
++            <div class="ml-8"><%= balance.asset.name %></div>
+           </div>
+           <div class="w-full md:w-2/3 text-md  text-gray-600 justify-between flex flex-row ml-2">
+             <div class=" items-center flex">

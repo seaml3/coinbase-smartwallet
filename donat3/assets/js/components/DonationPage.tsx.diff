@@ -1,0 +1,15 @@
+Commit log for assets/js/components/DonationPage.tsx:
+072817c 2024-06-15 10:32:52 +0700 fix authentication flow
+Diff for assets/js/components/DonationPage.tsx:
+diff --git a/assets/js/components/DonationPage.tsx b/assets/js/components/DonationPage.tsx
+index 22db1f6..71790ba 100644
+--- a/assets/js/components/DonationPage.tsx
++++ b/assets/js/components/DonationPage.tsx
+@@ -40,7 +40,6 @@ const DonationPage = () => {
+   }, [isConnected, sessionValue]);
+ 
+   useEffect(() => {
+-    console.log(isDisconnected, 'isDisconnected');
+     if (isDisconnected) {
+       setReadyForDonation(false);
+       clearSession();

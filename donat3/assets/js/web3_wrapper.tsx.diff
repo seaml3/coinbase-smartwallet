@@ -1,0 +1,102 @@
+Commit log for assets/js/web3_wrapper.tsx:
+118e22c 2024-06-25 14:50:16 +0700 add create a wallet button
+f144bf1 2024-06-23 10:21:13 +0700 async submit transaction api and blokchain
+69eb7e2 2024-06-23 00:41:22 +0700 add ssr true
+f9cc63c 2024-06-18 15:26:07 +0700 limit wallet
+072817c 2024-06-15 10:32:52 +0700 fix authentication flow
+e15a528 2024-06-13 16:33:08 +0700 add logo
+a61cd6d 2024-06-13 13:28:54 +0700 support base
+Diff for assets/js/web3_wrapper.tsx:
+diff --git a/assets/js/web3_wrapper.tsx b/assets/js/web3_wrapper.tsx
+index 728f527..7d6bdeb 100644
+--- a/assets/js/web3_wrapper.tsx
++++ b/assets/js/web3_wrapper.tsx
+@@ -1,9 +1,9 @@
+-import React from "react";
++import React, { useEffect } from "react";
+ 
+ import '@rainbow-me/rainbowkit/styles.css';
+ 
+-import { lightTheme, RainbowKitProvider, RainbowKitAuthenticationProvider } from '@rainbow-me/rainbowkit';
+-import { bscTestnet, bsc, sepolia, mainnet, polygon, polygonMumbai, ronin, avalanche } from 'wagmi/chains';
++import { lightTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit';
++import { bscTestnet, bsc, sepolia, mainnet, polygon, polygonMumbai, ronin, avalanche, base } from 'wagmi/chains';
+ 
+ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+ import { WagmiProvider, http } from 'wagmi'
+@@ -21,7 +21,8 @@ import { jibchain } from "./chains/jibchain";
+ import {
+   injectedWallet,
+   metaMaskWallet,
+-  walletConnectWallet
++  walletConnectWallet,
++  coinbaseWallet
+ } from '@rainbow-me/rainbowkit/wallets';
+ 
+ interface Props {
+@@ -35,21 +36,25 @@ const Web3Wrapper: React.FC<Props> = ({ children }: Props) => {
+   const chainEnv = document.querySelector('input[name="chainEnv"]') as HTMLInputElement;
+   let chainsSet;
+   if (chainEnv?.value == 'testnet') {
+-    chainsSet = [bscTestnet, klaytnTestnet, dfkTestnet, sepolia, wemixTestnet, polygonMumbai, jibchain, avalanche]
++    chainsSet = [bsc, bscTestnet, klaytnTestnet, dfkTestnet, sepolia, wemixTestnet, polygonMumbai, jibchain, avalanche, base]
+   } else if (chainEnv?.value == 'dev') {
+-    chainsSet = [hardhat, dfkTestnet, sepolia, wemixTestnet, polygonMumbai, jibchain, avalanche]
++    chainsSet = [bsc, base, dfkTestnet, sepolia, wemixTestnet, polygonMumbai, jibchain, avalanche]
+   } else if (chainEnv?.value == 'mainnet') {
+-    chainsSet = [bsc, klaytnMainnet, dfkMainnet, mainnet, wemixMainnet, polygon, jibchain, avalanche]
++    chainsSet = [bsc, klaytnMainnet, dfkMainnet, mainnet, wemixMainnet, polygon, jibchain, avalanche, base]
+   } else {
+     chainsSet = [bsc, klaytnMainnet, dfkMainnet, mainnet, wemixMainnet, polygon, jibchain]
+   }
+ 
++
++  coinbaseWallet.preference = "smartWalletOnly"
+   const projectId = '0bf858f0dcf8fcafcdd0dbcafc835181';
+ 
+   const config = getDefaultConfig({
+-    appName: 'DONAT3.live',
++    appName: 'DONAT3.LIVE',
++    appIcon: "https://donat3.live/images/donat3-logo.png",
+     projectId: projectId,
+     chains: chainsSet,
++    multiInjectedProviderDiscovery: false,
+     transports: {
+       [mainnet.id]: http(),
+       [dfkTestnet.id]: http(),
+@@ -66,23 +71,31 @@ const Web3Wrapper: React.FC<Props> = ({ children }: Props) => {
+       [jibchain.id]: http(),
+       [hardhat.id]: http(),
+       [avalanche.id]: http(),
++      [base.id]: http(),
+     },
+     wallets: [{
+-      groupName: "Recommended", wallets: [metaMaskWallet, injectedWallet, walletConnectWallet],
++      groupName: "Recommended", wallets: [injectedWallet, metaMaskWallet, coinbaseWallet, walletConnectWallet]
+     }]
+   })
+ 
+-  const queryClient = new QueryClient()
++  const Disclaimer = ({ Text, Link }) => (
++    <Text>
++      <Link href="https://wallet.coinbase.com/smart-wallet">Create a smart wallet</Link>
++    </Text>
++  );
+ 
+ 
++  const queryClient = new QueryClient()
+   return (
+     <WagmiProvider config={config}>
+       <QueryClientProvider client={queryClient}>
+-        <RainbowKitProvider modalSize='compact' theme={lightTheme()}>
++        <RainbowKitProvider modalSize='compact' theme={lightTheme()} initialChain={bsc} appInfo={{
++          disclaimer: Disclaimer,
++        }}>
+           {children}
+         </RainbowKitProvider>
+       </QueryClientProvider>
+-    </WagmiProvider>
++    </WagmiProvider >
+   );
+ };
+ 

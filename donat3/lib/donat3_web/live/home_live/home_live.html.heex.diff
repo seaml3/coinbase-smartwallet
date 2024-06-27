@@ -1,0 +1,60 @@
+Commit log for lib/donat3_web/live/home_live/home_live.html.heex:
+2f28d85 2024-06-23 23:48:09 +0700 add base and avax to homepage
+Diff for lib/donat3_web/live/home_live/home_live.html.heex:
+diff --git a/lib/donat3_web/live/home_live/home_live.html.heex b/lib/donat3_web/live/home_live/home_live.html.heex
+index d89aaa1..c7a01e4 100644
+--- a/lib/donat3_web/live/home_live/home_live.html.heex
++++ b/lib/donat3_web/live/home_live/home_live.html.heex
+@@ -170,14 +170,14 @@
+           Comprehensive Coverage Across Leading Networks
+         </h3>
+         <div class="mt-4 text-slate-200 w-full text-md">
+-          Our platform proudly supports a wide range of blockchains, including BSC (Binance Smart Chain), DFK Chain, Klaytn, Polygon, WEMIX Chain, and JBC Chain. 
++          Our platform proudly supports a wide range of blockchains, including BSC (Binance Smart Chain), DFK Chain, Klaytn, Polygon, WEMIX Chain, Base, Avalanche C-Chain and JBC Chain. 
+           This selection ensures broad accessibility and interconnectivity for our users, bridging diverse ecosystems in the digital realm. 
+           Continually expanding, we aim to include more blockchains to enhance your experience. Suggestions for new additions are always welcome!
+         </div>
+       </div>
+     </section>
+     <div class="w-full flex-col flex relative mt-32 md:mt-2">  
+-      <div class="w-full md:w-5/6 h-auto flex flex-wrap flex-row grid grid-cols-2 gap-1 md:grid-cols-3 md:gap-3 place-items-center place-content-evenly 
++      <div class="w-full md:w-5/6 h-auto flex flex-wrap flex-row grid grid-cols-2 gap-1 md:grid-cols-4 md:gap-3 place-items-center place-content-evenly 
+       aspect-square md:overflow-hidden meteor-bg items-center md:translate-y-48 md:-translate-x-96" 
+ 
+       id="meteor-image">
+@@ -213,6 +213,17 @@
+           </div>
+         </div>
+ 
++        <div class="flex flex-col relative">
++          <div class="flex h-28 w-28 p-3 items-center justify-center m-12   bg-white rounded-full bg-gradient-to-br from-purple-500 via-sky-500 to-fuchsia-500">
++            <div class="flex flex-col items-center justify-center rounded-full p-1 w-fit h-fit aspect-square bg-black shadow-md bg-opacity-70 scale-50  chain-image-wrapper">
++              <img src="/images/chains/base-chain.svg" class="w-20 h-20 aspect-square  z-40" />
++            </div>
++          </div>
++          <div class="items-center justify-center text-center bg-black text-white p-2 rounded-xl absolute w-48 font-bold chain-label scale-50 opacity-0">
++            Base
++          </div>
++        </div>
++
+         <div class="flex flex-col relative">
+           <div class="flex h-28 w-28 p-3 items-center justify-center m-12   bg-white rounded-full bg-gradient-to-br from-purple-500 via-sky-500 to-fuchsia-500">
+             <div class="flex flex-col items-center justify-center rounded-full p-1 w-fit h-fit aspect-square bg-black shadow-md bg-opacity-70 scale-50  chain-image-wrapper">
+@@ -224,6 +235,17 @@
+           </div>
+         </div>
+ 
++        <div class="flex flex-col relative">
++          <div class="flex h-28 w-28 p-3 items-center justify-center m-12   bg-white rounded-full bg-gradient-to-br from-purple-500 via-sky-500 to-fuchsia-500">
++            <div class="flex flex-col items-center justify-center rounded-full p-1 w-fit h-fit aspect-square bg-black shadow-md bg-opacity-70 scale-50  chain-image-wrapper">
++              <img src="/images/chains/avax-chain.svg" class="w-20 h-20 aspect-square  z-40" />
++            </div>
++          </div>
++          <div class="items-center justify-center text-center bg-black text-white p-2 rounded-xl absolute w-48 font-bold chain-label scale-50 opacity-0">
++            Avalanche
++          </div>
++        </div>
++
+         <div class="flex flex-col relative">
+           <div class="flex h-28 w-28 p-3 items-center justify-center m-12   bg-white rounded-full bg-gradient-to-br from-purple-500 via-sky-500 to-fuchsia-500">
+             <div class="flex flex-col items-center justify-center rounded-full p-1 w-fit h-fit aspect-square bg-black shadow-md bg-opacity-70 scale-50 chain-image-wrapper">

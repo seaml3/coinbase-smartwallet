@@ -1,0 +1,80 @@
+Commit log for assets/js/depositTransaction.ts:
+f144bf1 2024-06-23 10:21:13 +0700 async submit transaction api and blokchain
+Diff for assets/js/depositTransaction.ts:
+diff --git a/assets/js/depositTransaction.ts b/assets/js/depositTransaction.ts
+index c9665f5..bf20c00 100644
+--- a/assets/js/depositTransaction.ts
++++ b/assets/js/depositTransaction.ts
+@@ -6,7 +6,8 @@ type CreateDonateTransactionProps = {
+   username: string;
+   address: string;
+   session: string;
+-}
++  refCode: number;
++};
+ 
+ type submitDonateTransactionProps = {
+   transactionId: string;
+@@ -14,14 +15,16 @@ type submitDonateTransactionProps = {
+   address: string;
+   refCode: number;
+   session: string;
+-}
++};
+ 
+-const createDonateTransaction = (props: CreateDonateTransactionProps): Promise<Response> => {
+-  return fetch('/api/donate-transactions', {
+-    method: 'POST',
++const createDonateTransaction = (
++  props: CreateDonateTransactionProps
++): Promise<Response> => {
++  return fetch("/api/donate-transactions", {
++    method: "POST",
+     headers: {
+-      'Content-Type': 'application/json',
+-      'Authorization': 'Bearer ' + props.session
++      "Content-Type": "application/json",
++      Authorization: "Bearer " + props.session,
+     },
+     body: JSON.stringify({
+       amount: props.amount,
+@@ -29,24 +32,27 @@ const createDonateTransaction = (props: CreateDonateTransactionProps): Promise<R
+       donator_name: props.donatorName,
+       donate_message: props.donateMessage,
+       username: props.username,
+-      address: props.address
+-    })
++      address: props.address,
++      ref_code: props.refCode,
++    }),
+   });
+-}
++};
+ 
+-const submitDonateTransaction = (props: submitDonateTransactionProps): Promise<Response> => {
++const submitDonateTransaction = (
++  props: submitDonateTransactionProps
++): Promise<Response> => {
+   return fetch(`/api/donate-transactions/${props.transactionId}/submit`, {
+-    method: 'PATCH',
++    method: "PATCH",
+     headers: {
+-      'Content-Type': 'application/json',
+-      'Authorization': 'Bearer ' + props.session
++      "Content-Type": "application/json",
++      Authorization: "Bearer " + props.session,
+     },
+     body: JSON.stringify({
+       asset_id: props.assetId,
+       address: props.address,
+-      ref_code: props.refCode
+-    })
++      ref_code: props.refCode,
++    }),
+   });
+-}
++};
+ 
+-export { createDonateTransaction, submitDonateTransaction };
+\ No newline at end of file
++export { createDonateTransaction, submitDonateTransaction };

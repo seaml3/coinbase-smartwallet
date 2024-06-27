@@ -1,0 +1,18 @@
+Commit log for priv/repo/migrations/20240612083518_modify_signature_for_siwe_sessions.exs:
+a61cd6d 2024-06-13 13:28:54 +0700 support base
+Diff for priv/repo/migrations/20240612083518_modify_signature_for_siwe_sessions.exs:
+diff --git a/priv/repo/migrations/20240612083518_modify_signature_for_siwe_sessions.exs b/priv/repo/migrations/20240612083518_modify_signature_for_siwe_sessions.exs
+new file mode 100644
+index 0000000..1d6ba10
+--- /dev/null
++++ b/priv/repo/migrations/20240612083518_modify_signature_for_siwe_sessions.exs
+@@ -0,0 +1,9 @@
++defmodule Donat3.Repo.Migrations.ModifySignatureForSiweSessions do
++  use Ecto.Migration
++
++  def change do
++    alter table(:siwe_sessions) do
++      modify :signature, :text
++    end
++  end
++end

@@ -1,0 +1,7 @@
+Commit log for priv/static/images/mavia_base-logo.png:
+e15a528 2024-06-13 16:33:08 +0700 add logo
+Diff for priv/static/images/mavia_base-logo.png:
+diff --git a/priv/static/images/mavia_base-logo.png b/priv/static/images/mavia_base-logo.png
+new file mode 100644
+index 0000000..611263e
+Binary files /dev/null and b/priv/static/images/mavia_base-logo.png differ

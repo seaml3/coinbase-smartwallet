@@ -1,0 +1,39 @@
+Commit log for lib/donat3_web/controllers/donate_transaction_controller.ex:
+f144bf1 2024-06-23 10:21:13 +0700 async submit transaction api and blokchain
+Diff for lib/donat3_web/controllers/donate_transaction_controller.ex:
+diff --git a/lib/donat3_web/controllers/donate_transaction_controller.ex b/lib/donat3_web/controllers/donate_transaction_controller.ex
+index 045556b..80d05b0 100644
+--- a/lib/donat3_web/controllers/donate_transaction_controller.ex
++++ b/lib/donat3_web/controllers/donate_transaction_controller.ex
+@@ -1,6 +1,6 @@
+ defmodule Donat3Web.DonateTransactionController do
+   use Donat3Web, :controller
+-  alias Donat3.{DonateTransactions, DonateTransaction}
++  alias Donat3.{DonateTransactions}
+   alias Donat3.Accounts
+   alias Donat3.Workers.StreamingQueueWorker
+ 
+@@ -16,7 +16,7 @@ defmodule Donat3Web.DonateTransactionController do
+       asset_id: params["asset_id"],
+       donate_message: params["donate_message"],
+       amount: params["amount"],
+-      ref_code: gen_ref_code(),
++      ref_code: prepare_ref_code(params["ref_code"]),
+       donator_address: String.downcase(siwe_session.data["address"]),
+       status: "pending",
+       user_uid: streamer.uid
+@@ -72,6 +72,14 @@ defmodule Donat3Web.DonateTransactionController do
+       raise ArgumentError, "Address mismatch #{addr1} != #{addr2}}"
+   end
+ 
++  def prepare_ref_code(provided_ref_code) do
++    if provided_ref_code do
++      provided_ref_code
++    else
++      gen_ref_code()
++    end
++  end
++
+   defp gen_ref_code() do
+     :crypto.strong_rand_bytes(4) |> :binary.decode_unsigned()
+   end

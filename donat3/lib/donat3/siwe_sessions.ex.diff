@@ -1,0 +1,47 @@
+Commit log for lib/donat3/siwe_sessions.ex:
+a61cd6d 2024-06-13 13:28:54 +0700 support base
+Diff for lib/donat3/siwe_sessions.ex:
+diff --git a/lib/donat3/siwe_sessions.ex b/lib/donat3/siwe_sessions.ex
+index 6e385b5..99af4c7 100644
+--- a/lib/donat3/siwe_sessions.ex
++++ b/lib/donat3/siwe_sessions.ex
+@@ -1,4 +1,6 @@
+ defmodule Donat3.SiweSessions do
++  alias Donat3.Seaml3Client
++
+   @moduledoc """
+   The SiweSessions context.
+   """
+@@ -61,8 +63,9 @@ defmodule Donat3.SiweSessions do
+   def create_siwe_session(%{"raw" => raw, "signature" => signature} = params) do
+     session = Base.encode64(:crypto.strong_rand_bytes(128))
+ 
+-    Siwe.parse_if_valid(raw, signature)
++    Siwe.parse(raw)
+     |> verify_data()
++    |> verify_signature(raw, signature)
+     |> case do
+       {:ok, data} ->
+         %SiweSession{
+@@ -79,6 +82,21 @@ defmodule Donat3.SiweSessions do
+     end
+   end
+ 
++  def verify_signature({:ok, data}, raw, signature) do
++    with {:ok, %{result: result}} <-
++           Seaml3Client.verify_signature(
++             raw,
++             signature,
++             data.address
++           ) do
++      if result == true do
++        {:ok, data}
++      else
++        {:error, "invalid signature"}
++      end
++    end
++  end
++
+   defp verify_data({:ok, data}) do
+     %{
+       domain: domain,

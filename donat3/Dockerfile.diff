@@ -1,0 +1,15 @@
+Commit log for Dockerfile:
+b1973ac 2024-06-13 14:36:55 +0700 update dockerfile
+Diff for Dockerfile:
+diff --git a/Dockerfile b/Dockerfile
+index 16392b3..368aff0 100644
+--- a/Dockerfile
++++ b/Dockerfile
+@@ -26,6 +26,7 @@ COPY mix.exs mix.lock ./
+ ENV MIX_ENV=prod
+ RUN mix do deps.get --only prod, deps.compile
+ 
++RUN apk add python3
+ COPY assets ./assets
+ COPY assets/package.json assets/package-lock.json ./assets/
+ RUN npm install --prefix ./assets

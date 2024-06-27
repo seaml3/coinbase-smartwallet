@@ -1,0 +1,75 @@
+Commit log for assets/js/simple_web3_wrapper.tsx:
+118e22c 2024-06-25 14:50:16 +0700 add create a wallet button
+f144bf1 2024-06-23 10:21:13 +0700 async submit transaction api and blokchain
+69eb7e2 2024-06-23 00:41:22 +0700 add ssr true
+d424e4b 2024-06-15 15:25:08 +0700 fix app/connect wallet page
+Diff for assets/js/simple_web3_wrapper.tsx:
+diff --git a/assets/js/simple_web3_wrapper.tsx b/assets/js/simple_web3_wrapper.tsx
+index f102205..c73c906 100644
+--- a/assets/js/simple_web3_wrapper.tsx
++++ b/assets/js/simple_web3_wrapper.tsx
+@@ -15,11 +15,12 @@ import { dfkTestnet } from "./chains/dfkTestnet";
+ import { klaytnTestnet } from "./chains/klaytnTestnet";
+ import { wemixTestnet } from "./chains/wemixTestnet";
+ 
+-import { bscTestnet, sepolia, polygonMumbai, avalanche } from 'wagmi/chains';
++import { bscTestnet, sepolia, polygonMumbai, avalanche, base } from 'wagmi/chains';
+ 
+ import {
+   injectedWallet,
+   metaMaskWallet,
++  coinbaseWallet,
+   walletConnectWallet
+ } from '@rainbow-me/rainbowkit/wallets';
+ 
+@@ -33,19 +34,21 @@ const SimpleWeb3Wrapper: React.FC<Props> = ({ children }: Props) => {
+   const chainEnv = document.querySelector('input[name="chainEnv"]') as HTMLInputElement;
+   let chainsSet;
+   if (chainEnv?.value == 'testnet') {
+-    chainsSet = [bscTestnet, klaytnTestnet, dfkTestnet, sepolia, wemixTestnet, polygonMumbai, jibchain, avalanche]
++    chainsSet = [bsc, base, bscTestnet, klaytnTestnet, dfkTestnet, sepolia, wemixTestnet, polygonMumbai, jibchain, avalanche]
+   } else if (chainEnv?.value == 'dev') {
+-    chainsSet = [dfkTestnet, sepolia, wemixTestnet, polygonMumbai, jibchain, avalanche]
++    chainsSet = [bsc, base, dfkTestnet, sepolia, wemixTestnet, polygonMumbai, jibchain, avalanche]
+   } else if (chainEnv?.value == 'mainnet') {
+-    chainsSet = [bsc, klaytnMainnet, dfkMainnet, mainnet, wemixMainnet, polygon, jibchain, avalanche]
++    chainsSet = [bsc, base, klaytnMainnet, dfkMainnet, mainnet, wemixMainnet, polygon, jibchain, avalanche]
+   } else {
+-    chainsSet = [bsc, klaytnMainnet, dfkMainnet, mainnet, wemixMainnet, polygon, jibchain, avalanche]
++    chainsSet = [bsc, base, klaytnMainnet, dfkMainnet, mainnet, wemixMainnet, polygon, jibchain, avalanche]
+   }
+ 
++  coinbaseWallet.preference = "smartWalletOnly"
+   const projectId = '0bf858f0dcf8fcafcdd0dbcafc835181';
+ 
+   const config = getDefaultConfig({
+     appName: 'DONAT3.live',
++    appIcon: "https://donat3.live/images/donat3-logo.png",
+     projectId: projectId,
+     chains: chainsSet,
+     transports: {
+@@ -64,17 +67,21 @@ const SimpleWeb3Wrapper: React.FC<Props> = ({ children }: Props) => {
+       [polygonMumbai.id]: http(),
+     },
+     wallets: [{
+-      groupName: "Recommended", wallets: [metaMaskWallet, injectedWallet, walletConnectWallet],
++      groupName: "Recommended", wallets: [metaMaskWallet, injectedWallet, coinbaseWallet, walletConnectWallet],
+     }]
+   })
+ 
+   const queryClient = new QueryClient()
+-
++  const Disclaimer = ({ Text, Link }) => (
++    <Text>
++      <Link href="https://wallet.coinbase.com/smart-wallet">Create a smart wallet</Link>
++    </Text>
++  );
+ 
+   return (
+     <WagmiProvider config={config}  >
+       <QueryClientProvider client={queryClient}>
+-        <RainbowKitProvider modalSize='compact' theme={lightTheme({ accentColor: '#000000' })}>
++        <RainbowKitProvider modalSize='compact' theme={lightTheme({ accentColor: '#000000' })} initialChain={bsc} appInfo={{ disclaimer: Disclaimer }}>
+           {children}
+         </RainbowKitProvider>
+       </QueryClientProvider>

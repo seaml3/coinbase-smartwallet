@@ -1,0 +1,15 @@
+Commit log for assets/js/components/StreamerContextProvider.tsx:
+a61cd6d 2024-06-13 13:28:54 +0700 support base
+Diff for assets/js/components/StreamerContextProvider.tsx:
+diff --git a/assets/js/components/StreamerContextProvider.tsx b/assets/js/components/StreamerContextProvider.tsx
+index 32740e1..5e61d27 100644
+--- a/assets/js/components/StreamerContextProvider.tsx
++++ b/assets/js/components/StreamerContextProvider.tsx
+@@ -30,7 +30,6 @@ const StreamerContextProvider = ({ children }: { children: React.ReactNode }) =>
+ 
+     const getStreamerUsername = () => {
+         const usernameInput = document.querySelector('input[name="username"]') as HTMLInputElement;
+-        // console.log('usernameInput', usernameInput);
+         setUsername(usernameInput?.value || '');
+     }
+ 

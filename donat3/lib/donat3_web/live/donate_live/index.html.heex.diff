@@ -1,0 +1,14 @@
+Commit log for lib/donat3_web/live/donate_live/index.html.heex:
+ae1b917 2024-06-21 21:26:14 +0700 support paymaster from env
+Diff for lib/donat3_web/live/donate_live/index.html.heex:
+diff --git a/lib/donat3_web/live/donate_live/index.html.heex b/lib/donat3_web/live/donate_live/index.html.heex
+index 642785c..84c2cb9 100644
+--- a/lib/donat3_web/live/donate_live/index.html.heex
++++ b/lib/donat3_web/live/donate_live/index.html.heex
+@@ -1,5 +1,6 @@
+ <div class="">
+   <input type="hidden" name="username" value={@username} />
+   <input type="hidden" name="chainEnv" value={@chain_env} />
++  <input type="hidden" name="paymasterUrl" value={@paymaster_url} />
+   <div id="root" phx-update="ignore"></div>
+ </div>
